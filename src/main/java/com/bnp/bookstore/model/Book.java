@@ -15,6 +15,10 @@ public class Book {
 	public String author;
 	public Double price;
 	
+	public Book() {
+		
+	}
+	
 
 public Book(Long id, String title, String author, Double price) {
 		super();
