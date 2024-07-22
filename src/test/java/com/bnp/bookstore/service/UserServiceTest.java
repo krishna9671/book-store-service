@@ -12,6 +12,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -40,9 +42,10 @@ public class UserServiceTest {
         // Arrange
         String username = "testUser";
         String password = "testPass";
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(hashedPassword);
 
         when(userRepository.findByusername(username)).thenReturn(Optional.of(user));
 
@@ -58,9 +61,10 @@ public class UserServiceTest {
         // Arrange
         String username = "testUser";
         String password = "testPass";
+        String hashedPassword = BCrypt.hashpw("wrongPass", BCrypt.gensalt());
         User user = new User();
         user.setUsername(username);
-        user.setPassword("wrongPass");
+        user.setPassword(hashedPassword);
 
         when(userRepository.findByusername(username)).thenReturn(Optional.of(user));
 
