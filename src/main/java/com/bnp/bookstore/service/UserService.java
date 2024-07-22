@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 @Service
 public class UserService {
 
@@ -19,7 +21,8 @@ public class UserService {
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
     	User user = new User();
     	user.setUsername(username);
-    	user.setPassword(password);
+    	String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+    	user.setPassword(hashedPassword);
         userRepository.save(user);
     }
 
@@ -28,7 +31,8 @@ public class UserService {
         
         if(foundUser.isPresent()) {
         	User matchUser = foundUser.get();
-        	return foundUser !=null && password.equals(matchUser.getPassword());
+//        	return foundUser !=null && password.equals(matchUser.getPassword());
+        	return BCrypt.checkpw(password, matchUser.getPassword());
         }
         return false;
     }
